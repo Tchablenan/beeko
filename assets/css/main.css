@@ -23230,3 +23230,158 @@ blockquote cite {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+/* ====== Card infos légales ANB ====== */
+.company-card{
+  --card-bg: #ffffff;
+  --card-ring: rgba(15, 24, 55, .10);
+  --card-shadow: 0 10px 30px rgba(3,10,27,.08);
+  --key-color: #0a2a6b;       /* adapte à ta charte */
+  --chip-bg: #f4f7ff;         /* bandeau titre doux */
+  --brand: #0039cb;           /* couleur d’accent icônes */
+  background: var(--card-bg);
+  border: 1px solid var(--card-ring);
+  border-radius: 16px;
+  padding: 18px 18px 8px;
+  box-shadow: var(--card-shadow);
+}
+
+.company-card__title{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--chip-bg);
+  color: var(--key-color);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 999px;
+  margin: 0 0 14px;
+}
+.company-card__title i{ color: var(--brand); }
+
+/* Liste en 2 colonnes : libellé (220px) / valeur (auto) */
+.company-card__list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.company-card__list li{
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 24, 55, .06);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fafcff 0%, #ffffff 100%);
+}
+
+/* Libellé (clé) */
+.company-card .key{
+  font-weight: 700;
+  color: var(--key-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.company-card .key i{
+  color: var(--brand);
+  width: 18px; text-align: center;
+}
+
+/* Valeur */
+.company-card .val{
+  color: #1b1b1b;
+}
+.company-card .val a{
+  color: inherit; text-decoration: none; border-bottom: 1px dashed rgba(0,0,0,.2);
+}
+.company-card .val a:hover{ border-color: currentColor; }
+
+/* Responsive : passe la clé au-dessus de la valeur */
+@media (max-width: 768px){
+  .company-card__list li{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== PRICING (scopé) ===== */
+.pricing__area .pricing__card{
+  background:#fff;
+  border:1px solid rgba(15,24,55,.08);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(3,10,27,.06);
+  padding:22px 18px;
+  height:100%;
+  display:flex; flex-direction:column;
+  position:relative; overflow:hidden;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.pricing__area .pricing__card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 16px 40px rgba(3,10,27,.12);
+}
+
+.pricing__area .pricing__badge{
+  position:absolute; top:10px; right:-34px;
+  background:#0039cb; color:#fff;
+  font-weight:700; font-size:.8rem;
+  padding:6px 40px; transform:rotate(35deg);
+}
+.pricing__area .pricing__card.is-popular{
+  border-color:rgba(0,57,203,.25);
+  box-shadow:0 14px 34px rgba(0,57,203,.18);
+}
+
+.pricing__area .pricing__head{ margin-bottom:12px; }
+.pricing__area .pricing__name{ margin:0 0 8px; font-size:1.1rem; font-weight:800; }
+.pricing__area .pricing__price{ display:flex; align-items:flex-end; gap:6px; }
+.pricing__area .pricing__price strong{ font-size:1.8rem; line-height:1; }
+.pricing__area .pricing__price span{ font-size:.9rem; color:#5f6b7a; }
+
+.pricing__area .pricing__list{ margin:12px 0 16px; }
+.pricing__area .pricing__list li{
+  position:relative; padding-left:26px; margin:10px 0; color:#1b1b1b;
+}
+.pricing__area .pricing__list li::before{
+  content:""; position:absolute; left:0; top:.35rem;
+  width:16px; height:16px; border-radius:50%;
+  background:linear-gradient(135deg, #0039cb, #4f8bff);
+  mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.525 3.5L5.303 9.722 2.475 6.894' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / 12px 12px;
+}
+
+.pricing__area .pricing__cta{ margin-top:auto; }
+.pricing__area .pricing__note{ color:#667085; }
+
+/* Responsive */
+@media (max-width: 991.98px){
+  .pricing__area .pricing__badge{ right:-28px; transform:rotate(28deg); }
+}
+
+/* ==== Mission & Valeurs (scopé) ==== */
+.mission__area .mv__lead{ color:#1b1b1b; }
+.mission__area .mv__list{ margin:16px 0 0; }
+.mission__area .mv__list li{
+  display:flex; gap:10px; margin:10px 0; color:#1b1b1b; line-height:1.55;
+}
+.mission__area .mv__list i{ color:#0039cb; margin-top:.2rem; }
+
+/* Cards Valeurs */
+.mission__area .mv__card{
+  background:#fff; border:1px solid rgba(15,24,55,.08); border-radius:16px;
+  box-shadow:0 10px 30px rgba(3,10,27,.06);
+  padding:18px; height:100%;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.mission__area .mv__card:hover{
+  transform:translateY(-4px); box-shadow:0 16px 40px rgba(3,10,27,.12);
+}
+.mission__area .mv__icon{
+  width:42px; height:42px; border-radius:12px; display:grid; place-items:center; margin-bottom:10px;
+  background:linear-gradient(135deg,#0039cb,#4f8bff); color:#fff; font-size:18px;
+}
+.mission__area .mv__title{ margin:0 0 6px; font-weight:800; font-size:1.05rem; }
+.mission__area .mv__text{ margin:0; color:#5f6b7a; font-size:.96rem; }

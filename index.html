@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Shared on THEMELOCK.COM - Beeko - Business Consulting HTML Template</title>
+    <title>ANB Corporate</title>
     <meta name="description" content="Beeko -  Business Consulting HTML Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -26,6 +26,78 @@
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
+<script>
+    (function () {
+        // Liens du menu (structure: ul.navigation > li > a)
+        const links = Array.from(document.querySelectorAll('.navigation > li > a[href^="#"]'));
+        if (!links.length) return;
+
+        // Calcule l’offset du header fixe
+        const header = document.querySelector('.tgmenu__nav, .sticky-header, header.nav, .header-area');
+        function getOffset() { return (header?.offsetHeight || 0) + 1; }
+
+        // Map sections <-> liens
+        const map = new Map();
+        links.forEach(a => {
+            const id = decodeURIComponent(a.getAttribute('href').slice(1));
+            const sec = document.getElementById(id);
+            if (sec) map.set(sec, a);
+        });
+        if (!map.size) return;
+
+        // Helpers pour activer/désactiver la classe sur les <li>
+        function setActive(a) {
+            links.forEach(x => x.parentElement && x.parentElement.classList.remove('active'));
+            a.parentElement && a.parentElement.classList.add('active');
+        }
+
+        // Scroll doux + active au clic
+        links.forEach(a => {
+            a.addEventListener('click', e => {
+                const hash = a.getAttribute('href');
+                const el = document.querySelector(hash);
+                if (!el) return;
+                e.preventDefault();
+                const y = el.getBoundingClientRect().top + window.pageYOffset - getOffset();
+                window.scrollTo({ top: y, behavior: 'smooth' });
+                setActive(a);
+                history.replaceState(null, '', hash);
+            });
+        });
+
+        // Active auto selon la section visible (au scroll)
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const link = map.get(entry.target);
+                    if (!link) return;
+                    if (entry.isIntersecting) setActive(link);
+                });
+            }, {
+                // On considère la section "active" dès ~30% visible, en tenant compte du header
+                rootMargin: `-${getOffset()}px 0px -60% 0px`,
+                threshold: [0.3]
+            });
+            map.forEach((_, section) => io.observe(section));
+        } else {
+            // Fallback simple
+            window.addEventListener('scroll', () => {
+                let current = null, off = getOffset();
+                map.forEach((a, sec) => {
+                    const top = sec.getBoundingClientRect().top - off;
+                    if (top <= 5) current = a;
+                });
+                if (current) setActive(current);
+            }, { passive: true });
+        }
+
+        // État initial (hash courant ou premier lien)
+        const init = (location.hash && document.querySelector('.navigation > li > a[href="' + location.hash + '"]')) || links[0];
+        if (init) setActive(init);
+    })();
+</script>
+
+
 <body>
 
     <!-- preloader -->
@@ -46,7 +118,7 @@
     <!-- Scroll-top-end-->
 
     <!-- header-area -->
-    <header>
+    <header id="home" class="header-area">
         <div class="tg-header__top">
             <div class="container custom-container">
                 <div class="row align-items-center">
@@ -54,21 +126,31 @@
                         <div class="tg-header__top-info">
                             <ul class="list-wrap">
                                 <li><i class="flaticon-placeholder"></i>Abidjan Cocody angré 8e tranche</li>
-                                <li><i class="flaticon-envelope"></i><a href="mailto:anbcorporate225@gmail.com">anbcorporate225@gmail.com</a></li>
+                                <li><i class="flaticon-envelope"></i><a
+                                        href="mailto:anbcorporate225@gmail.com">anbcorporate225@gmail.com</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <div class="tg-header__top-right">
                             <ul class="list-wrap">
-                                <li><i class="flaticon-telephone"></i><a href="anbcorporate225@gmail.com">+225 07 87 44 88 57</a></li>
+                                <li><i class="flaticon-telephone"></i><a href="anbcorporate225@gmail.com">+225 07 87 44
+                                        88 57</a></li>
                                 <li>
                                     <div class="tg-header__top-social">
                                         <ul class="list-wrap">
-                                            <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                            <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                            <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                            <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                            <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                        src="assets/img/icons/facebook.svg" alt=""
+                                                        class="injectable"></a></li>
+                                            <li><a href="https://x.com/home" target="_blank"><img
+                                                        src="assets/img/icons/twitter.svg" alt=""
+                                                        class="injectable"></a></li>
+                                            <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                        src="assets/img/icons/instagram.svg" alt=""
+                                                        class="injectable"></a></li>
+                                            <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                        src="assets/img/icons/pinterest.svg" alt=""
+                                                        class="injectable"></a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -91,23 +173,25 @@
                                 <div class="tgmenu__navbar-wrap tgmenu__main-menu d-none d-lg-flex">
                                     <ul class="navigation">
                                         <li class="active  tg-mega-menu-has-children"><a href="#home">Acceuil</a>
-                                           
+
                                         </li>
-                                        <li class=""><a href="#about">A propos</a>
-                                       
+                                        <li class="active  tg-mega-menu-has-children"><a href="#about">A propos</a>
+
                                         </li>
-                                        <li class=""><a href="#service">Services</a>
-                                           
+                                        <li class=" "><a href="#service">Services</a>
+
                                         </li>
-                                        
-                                        
+<li><a href="#tarifs">Tarifs</a></li>
+
+
                                     </ul>
                                 </div>
                                 <div class="tgmenu__action">
                                     <ul class="list-wrap">
-                                       
+
                                         <li class="header-btn">
-                                            <a href="#contact" class="tg-btn"><img src="assets/img/icons/comment.svg" alt="" class="injectable"> Contact</a>
+                                            <a href="#contact" class="tg-btn"><img src="assets/img/icons/comment.svg"
+                                                    alt="" class="injectable"> Contact</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -126,7 +210,7 @@
                 <div class="nav-logo">
                     <a href="index.html"><img src="assets/img/logo/logo.svg" alt="Logo"></a>
                 </div>
-                
+
                 <div class="tgmobile__menu-outer">
                     <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
                 </div>
@@ -144,9 +228,9 @@
         <div class="tgmobile__menu-backdrop"></div>
         <!-- End Mobile Menu -->
 
-    
 
-    
+
+
 
     </header>
     <!-- header-area-end -->
@@ -164,13 +248,16 @@
                 <div class="row align-items-center justify-content-center">
                     <div class="col-lg-7">
                         <div class="banner__content">
-                            <span class="sub-title" data-aos="fade-up" data-aos-delay="0">Bienvenue chez ANB CORPORATE</span>
+                            <span class="sub-title" data-aos="fade-up" data-aos-delay="0">Bienvenue chez ANB
+                                CORPORATE</span>
                             <h2 class="title" data-aos="fade-up" data-aos-delay="300">CRÉEZ VOTRE
-ENTREPRISE EN
-TOUTE SIMPLICITÉ </h2>
-                            <p data-aos="fade-up" data-aos-delay="500">Nous vous accompagnons de la conception au lancement de votre entreprise en vous soutenans à chaque étape.</p>
+                                ENTREPRISE EN
+                                TOUTE SIMPLICITÉ </h2>
+                            <p data-aos="fade-up" data-aos-delay="500">Nous vous accompagnons de la conception au
+                                lancement de votre entreprise en vous soutenans à chaque étape.</p>
                             <div class="banner__btn" data-aos="fade-up" data-aos-delay="700">
-                                <a href="#contact" class="tg-btn">CONTACTEZ-NOUS <img src="assets/img/icons/right_arrow.svg" alt="" class="injectable"></a>
+                                <a href="#contact" class="tg-btn">CONTACTEZ-NOUS <img
+                                        src="assets/img/icons/right_arrow.svg" alt="" class="injectable"></a>
                             </div>
                         </div>
                     </div>
@@ -198,7 +285,8 @@ TOUTE SIMPLICITÉ </h2>
                         <div class="about__img-wrap">
                             <div class="about__images">
                                 <img src="assets/img/images/abn.JPG" alt="img">
-                                <img src="assets/img/images/logo2.jpg" alt="img" data-aos="fade-up" data-aos-delay="200">
+                                <img src="assets/img/images/logo2.jpg" alt="img" data-aos="fade-up"
+                                    data-aos-delay="200">
                             </div>
                             <div class="experience__wrap" data-aos="fade-left" data-aos-delay="200">
                                 <h2 class="count">5+</h2>
@@ -214,7 +302,8 @@ TOUTE SIMPLICITÉ </h2>
                                 </div>
                             </div>
                             <div class="shape">
-                                <img src="assets/img/images/about_shape01.svg" alt="shape" data-aos="fade-up-right" data-aos-delay="600">
+                                <img src="assets/img/images/about_shape01.svg" alt="shape" data-aos="fade-up-right"
+                                    data-aos-delay="600">
                                 <img src="assets/img/images/about_shape02.svg" alt="shape" class="alltuchtopdown">
                             </div>
                         </div>
@@ -225,10 +314,18 @@ TOUTE SIMPLICITÉ </h2>
 
                                 <h2 class="title" style="color:brown"> QUI SOMMES NOUS?
                             </div>
-                            <p>ANB CORPORATE est un cabinet spécialisé dans la création et la mise en place de structures juridiques pour les entreprises. Nous offrons des services complets pour aider les entrepreneurs et les investisseurs à établir leur société de manière efficace et conforme aux lois en vigueur en Côte d’ivoire .
-
-Nos experts en droit des sociétés et en comptabilité travaillent en étroite collaboration avec l’administration  pour fournir des conseils personnalisés et des solutions adaptées à chaque projet. Nous nous occupons de toutes les étapes de la constitution de société, de la recherche de la forme juridique appropriée à l'obtention des autorisations nécessaires.
-</p>
+                            <p> <strong>ANB CORPORATE</strong> est un cabinet basé à Abidjan (Cocody, Angré 7e/8e
+                                tranche) spécialisé
+                                dans l’<strong>accompagnement à la création d’entreprise</strong>, l’<strong>assistance
+                                    comptable, fiscale et
+                                    juridique</strong>, ainsi que le <strong>pilotage de la performance</strong>. Nous
+                                conseillons les porteurs de projets,
+                                TPE/PME et organisations à chaque étape : choix de la forme juridique, constitution et
+                                enregistrement,
+                                rattachements (Impôts, CNPS, Inspection du travail), obligations fiscales & sociales,
+                                tableaux de bord et
+                                conformité continue.
+                            </p>
                             <div class="about__inner-wrap">
                                 <div class="about__list-box">
                                     <div class="about__list-box-item">
@@ -249,36 +346,99 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     </div>
                                 </div>
                                 <div class="about__inner-content">
-                                    <p>Nous accompagnons les entreprises partenaires avec un soutien juridique, comptable et stratégique .</p>
+                                    <p>Délivrer une information fiable, optimiser la trésorerie et
+                                        sécuriser la conformité,
+                                        pour vous permettre de vous concentrer sur votre cœur de métier.</p>
                                     <ul class="list-wrap about__list-item">
                                         <li>
                                             <div class="icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    viewBox="0 0 14 14" fill="none">
+                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394"
+                                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
                                                 </svg>
                                             </div>
-                                            Integrité 
+                                            Integrité
                                         </li>
                                         <li>
                                             <div class="icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    viewBox="0 0 14 14" fill="none">
+                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394"
+                                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
                                                 </svg>
                                             </div>
-                                            Rapidité
+                                            Innovation
                                         </li>
                                         <li>
                                             <div class="icon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    viewBox="0 0 14 14" fill="none">
+                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394"
+                                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
                                                 </svg>
                                             </div>
-                                           Efficacité
+                                            Rigueur
+                                        </li>
+                                        <li>
+                                            <div class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    viewBox="0 0 14 14" fill="none">
+                                                    <path d="M11.5252 3.5L5.30301 9.72222L2.47473 6.89394"
+                                                        stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                            Confidentialité
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            
+
+                            <div class="company-card">
+  <h5 class="company-card__title">
+    <i class="far fa-id-card"></i> Informations légales
+  </h5>
+
+  <ul class="company-card__list">
+    <li>
+      <span class="key"><i class="far fa-building"></i> Raison sociale</span>
+      <span class="val">ANB CORPORATE (SARL)</span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-coins"></i> Capital social</span>
+      <span class="val">1 000 000 FCFA</span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-file-signature"></i> RCCM</span>
+      <span class="val">CI-ABJ-03-2025-B13-00359</span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-hashtag"></i> N° NCC</span>
+      <span class="val">2500120 F</span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-file-invoice-dollar"></i> Régime fiscal</span>
+      <span class="val">TEE (Taxe d’État de l’entreprenant)</span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-phone-alt"></i> Contacts</span>
+      <span class="val">
+        <a href="tel:+2250787448857">+225 07 87 44 88 57</a> — 
+        <a href="mailto:anbcorporate225@gmail.com">anbcorporate225@gmail.com</a>
+      </span>
+    </li>
+    <li>
+      <span class="key"><i class="fas fa-map-marker-alt"></i> Adresse</span>
+      <span class="val">Abidjan, Cocody, Angré 7e/8e tranche</span>
+    </li>
+  </ul>
+</div>
+
+
                         </div>
                     </div>
                 </div>
@@ -286,132 +446,279 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
         </section>
         <!-- about-area-end -->
 
+        <!-- mission & valeurs (contenu issu de la présentation ANB CORPORATE) -->
+<section id="mission" class="mission__area section-py-130">
+  <div class="container">
+    <div class="row align-items-start gutter-y-30">
+      <!-- Mission -->
+      <div class="col-lg-6">
+        <div class="section__title mb-15" data-aos="fade-up">
+          <span class="sub-title">Notre cap</span>
+          <h2 class="title" style="color:brown">Notre mission</h2>
+        </div>
+        <p class="mv__lead" data-aos="fade-up" data-aos-delay="100">
+          Le département Comptabilité & Finances d’ANB CORPORATE est un <strong>partenaire stratégique</strong> de la croissance.
+          Notre mission s’articule autour de quatre engagements fondamentaux :
+        </p>
+
+        <ul class="mv__list list-wrap" data-aos="fade-up" data-aos-delay="150">
+          <li><i class="fas fa-shield-check"></i> <strong>Fiabilité de l’information</strong> — Produire des données exactes, conformes et auditées pour une prise de décision éclairée.</li>
+          <li><i class="fas fa-hand-holding-usd"></i> <strong>Optimisation de la trésorerie</strong> — Garantir la solvabilité et la flexibilité financière via une gestion proactive des flux.</li>
+          <li><i class="fas fa-scale-balanced"></i> <strong>Conformité & transparence</strong> — Respect strict des obligations légales, fiscales et sociales, dans la transparence avec les parties prenantes.</li>
+          <li><i class="fas fa-chart-line"></i> <strong>Pilotage de la performance</strong> — Analyses pertinentes & tableaux de bord pour mesurer la rentabilité et soutenir la stratégie business.</li>
+        </ul>
+      </div>
+
+      <!-- Valeurs -->
+      <div class="col-lg-6">
+        <div class="section__title mb-15" data-aos="fade-up">
+          <span class="sub-title">Ce qui nous guide</span>
+          <h2 class="title" style="color:brown">Nos valeurs</h2>
+        </div>
+
+        <div class="row gutter-y-20">
+          <div class="col-sm-6" data-aos="fade-up" data-aos-delay="0">
+            <div class="mv__card">
+              <div class="mv__icon"><i class="fas fa-user-shield"></i></div>
+              <h5 class="mv__title">Intégrité</h5>
+              <p class="mv__text">Exactitude et honnêteté à la base de toutes nos actions.</p>
+            </div>
+          </div>
+          <div class="col-sm-6" data-aos="fade-up" data-aos-delay="50">
+            <div class="mv__card">
+              <div class="mv__icon"><i class="fas fa-clipboard-check"></i></div>
+              <h5 class="mv__title">Rigueur</h5>
+              <p class="mv__text">Respect des procédures et des délais, sans compromis.</p>
+            </div>
+          </div>
+          <div class="col-sm-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="mv__card">
+              <div class="mv__icon"><i class="fas fa-lightbulb"></i></div>
+              <h5 class="mv__title">Innovation</h5>
+              <p class="mv__text">Automatiser & optimiser nos processus grâce aux outils.</p>
+            </div>
+          </div>
+          
+          <div class="col-sm-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="mv__card">
+              <div class="mv__icon"><i class="fas fa-user-lock"></i></div>
+              <h5 class="mv__title">Confidentialité</h5>
+              <p class="mv__text">Protection stricte des données financières et sensibles.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Valeurs -->
+    </div>
+  </div>
+</section>
+<!-- /mission & valeurs -->
+
+
         <!-- services-area -->
-        <section id="service" class="services__area fix section-py-130 services__bg" data-background="assets/img/bg/services_bg.png">
+        <section id="service" class="services__area fix section-py-130 services__bg"
+            data-background="assets/img/bg/services_bg.png">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-6 col-lg-8">
                         <div class="section__title text-center mb-50">
-                           
+
                             <h2 class="title" style="color:brown">DECOUVREZ NOS SERVICES</h2>
                         </div>
                     </div>
                 </div>
                 <div class="swiper-container services-active fix">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="services__item shine__animate-item">
-                                <div class="services__thumb shine__animate-link">
-                                    <a href="services-details.html"><img src="assets/img/services/creation-entreprise.jpg" alt="img"></a>
-                                    <div class="services__icon">
-                                        <i class="flaticon-investment"></i>
-                                    </div>
-                                </div>
-                                <div class="services__content">
-                                    <h3 class="title"><a href="services-details.html">🏢 Creation d'entreprise</a></h3>
-                                    <p>Nous vous accompagnons dans toutes les étapes de création de votre entreprise, de l'analyse de votre projet à l'immatriculation. Notre équipe identifie la forme juridique adaptée à vos besoins et gère toutes les formalités administratives pour une mise en service rapide et conforme.</p>
-                                   
-                                </div>
-                                <div class="services__item-shape">
-                                    <img src="assets/img/services/services_item_shape.svg" alt="shape">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="services__item shine__animate-item">
-                                <div class="services__thumb shine__animate-link">
-                                    <a href="services-details.html"><img src="assets/img/services/service2.jpg" alt="img"></a>
-                                    <div class="services__icon">
-                                        <i class="flaticon-report"></i>
-                                    </div>
-                                </div>
-                                <div class="services__content">
-                                    <h3 class="title"><a href="services-details.html">📋 Assistance aux Agréments Spécialisés</a></h3>
-                                    <p>Nous facilitons l'obtention de vos agréments sectoriels (immobilier, FDFP, etc.) en constituant vos dossiers et en suivant leur instruction auprès des autorités compétentes jusqu'à leur validation finale.</p>
-                                   
-                                </div>
-                                <div class="services__item-shape">
-                                    <img src="assets/img/services/services_item_shape.svg" alt="shape">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="services__item shine__animate-item">
-                                <div class="services__thumb shine__animate-link">
-                                    <a href="services-details.html"><img src="assets/img/services/juridique.png" alt="img"></a>
-                                    <div class="services__icon">
-                                        <i class="flaticon-target"></i>
-                                    </div>
-                                </div>
-                                <div class="services__content">
-                                    <h3 class="title"><a href="services-details.html">⚖️ Assistance Juridique</a></h3>
-                                    <p>Nos juristes spécialisés vous conseillent sur toutes vos problématiques de droit des sociétés : modifications statutaires, conflits associés, conformité réglementaire. Nous assurons également une veille juridique pour anticiper les évolutions légales.</p>
-                                    
-                                </div>
-                                <div class="services__item-shape">
-                                    <img src="assets/img/services/services_item_shape.svg" alt="shape">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="services__item shine__animate-item">
-                                <div class="services__thumb shine__animate-link">
-                                    <a href="services-details.html"><img src="assets/img/services/finance.png" alt="img"></a>
-                                    <div class="services__icon">
-                                        <i class="flaticon-accountant"></i>
-                                    </div>
-                                </div>
-                                <div class="services__content">
-                                    <h3 class="title"><a href="services-details.html">📊 Analyse Financière</a></h3>
-                                    <p>Nos experts réalisent des diagnostics financiers complets de votre entreprise, élaborent vos business plans et vous conseillent sur les stratégies d'optimisation de votre rentabilité et trésorerie.</p>
-                            
-                                </div>
-                                <div class="services__item-shape">
-                                    <img src="assets/img/services/services_item_shape.svg" alt="shape">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="services__item shine__animate-item">
-                                <div class="services__thumb shine__animate-link">
-                                    <a href="services-details.html"><img src="assets/img/services/formation.png" alt="img"></a>
-                                    <div class="services__icon">
-                                        <i class="flaticon-report"></i>
-                                    </div>
-                                </div>
-                                <div class="services__content">
-                                    <h3 class="title"><a href="services-details.html">🎓 Formation</a></h3>
-                                    <p>Nous proposons des formations personnalisées en gestion d'entreprise, droit des affaires et fiscalité pour renforcer vos compétences et celles de vos équipes selon vos besoins spécifiques.</p>
-                                    
-                                <div class="services__item-shape">
-                                    <img src="assets/img/services/services_item_shape.svg" alt="shape">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<div class="swiper-wrapper">
+  <!-- Comptabilité Générale & Fiscalité -->
+  <div class="swiper-slide">
+    <div class="services__item shine__animate-item">
+      <div class="services__thumb shine__animate-link">
+        <a href="services-details.html"><img src="assets/img/services/finance.png" alt="Comptabilité Générale & Fiscalité"></a>
+        <div class="services__icon"><i class="flaticon-accountant"></i></div>
+      </div>
+      <div class="services__content">
+        <h3 class="title"><a href="services-details.html">📘 Comptabilité Générale & Fiscalité</a></h3>
+        <p>Tenue & arrêtés des comptes (mensuels/annuels), états financiers (bilan, compte de résultat), déclarations TVA & IS, relation avec l’expert-comptable et les commissaires aux comptes.</p>
+      </div>
+      <div class="services__item-shape"><img src="assets/img/services/services_item_shape.svg" alt="shape"></div>
+    </div>
+  </div>
+
+  <!-- Comptabilité Clients & Recouvrement -->
+  <div class="swiper-slide">
+    <div class="services__item shine__animate-item">
+      <div class="services__thumb shine__animate-link">
+        <a href="services-details.html"><img src="assets/img/services/service2.jpg" alt="Comptabilité Clients & Recouvrement"></a>
+        <div class="services__icon"><i class="flaticon-report"></i></div>
+      </div>
+      <div class="services__content">
+        <h3 class="title"><a href="services-details.html">👥 Comptabilité Clients & Recouvrement</a></h3>
+        <p>Émission des factures & gestion du portefeuille clients, suivi et relance des créances, application de la politique commerciale, gestion des litiges.</p>
+      </div>
+      <div class="services__item-shape"><img src="assets/img/services/services_item_shape.svg" alt="shape"></div>
+    </div>
+  </div>
+
+  <!-- Comptabilité Fournisseurs & Trésorerie -->
+  <div class="swiper-slide">
+    <div class="services__item shine__animate-item">
+      <div class="services__thumb shine__animate-link">
+        <a href="services-details.html"><img src="assets/img/services/finance.png" alt="Comptabilité Fournisseurs & Trésorerie"></a>
+        <div class="services__icon"><i class="flaticon-investment"></i></div>
+      </div>
+      <div class="services__content">
+        <h3 class="title"><a href="services-details.html">🤝 Comptabilité Fournisseurs & Trésorerie</a></h3>
+        <p>Enregistrement & contrôle des factures fournisseurs, préparation/planification des paiements, gestion quotidienne de la trésorerie, prévisionnels de cash-flow, relation bancaire.</p>
+      </div>
+      <div class="services__item-shape"><img src="assets/img/services/services_item_shape.svg" alt="shape"></div>
+    </div>
+  </div>
+
+  <!-- Contrôle de Gestion & Reporting -->
+  <div class="swiper-slide">
+    <div class="services__item shine__animate-item">
+      <div class="services__thumb shine__animate-link">
+        <a href="services-details.html"><img src="assets/img/services/juridique.png" alt="Contrôle de Gestion & Reporting"></a>
+        <div class="services__icon"><i class="flaticon-pie-chart-1"></i></div>
+      </div>
+      <div class="services__content">
+        <h3 class="title"><a href="services-details.html">📈 Contrôle de Gestion & Reporting</a></h3>
+        <p>Élaboration du budget & des prévisions, analyse des écarts et calcul des coûts, production de tableaux de bord pour le management.</p>
+      </div>
+      <div class="services__item-shape"><img src="assets/img/services/services_item_shape.svg" alt="shape"></div>
+    </div>
+  </div>
+
+  <!-- Sous-traitance de la Paie -->
+  <div class="swiper-slide">
+    <div class="services__item shine__animate-item">
+      <div class="services__thumb shine__animate-link">
+        <a href="services-details.html"><img src="assets/img/services/formation.png" alt="Sous-traitance de la Paie"></a>
+        <div class="services__icon"><i class="flaticon-target"></i></div>
+      </div>
+      <div class="services__content">
+        <h3 class="title"><a href="services-details.html">🧾 Sous-traitance de la Paie</a></h3>
+        <p>Gestion externalisée avec un prestataire spécialisé, sous le contrôle étroit de notre département pour une parfaite intégration des données.</p>
+      </div>
+      <div class="services__item-shape"><img src="assets/img/services/services_item_shape.svg" alt="shape"></div>
+    </div>
+  </div>
+</div>
+                   
                 </div>
-                <div class="services__bottom-content text-center mt-70">
-                    <p>Notre engagement : Un service de qualité, réactif et personnalisé pour votre réussite.</p>
+                <div class="services__shape-wrap">
+                    <img src="assets/img/services/services_shape01.svg" alt="shape" data-aos="fade-down-left"
+                        data-aos-delay="400">
+                    <img src="assets/img/services/services_shape02.svg" alt="shape" data-aos="fade-up-right"
+                        data-aos-delay="400">
                 </div>
-            </div>
-            <div class="services__shape-wrap">
-                <img src="assets/img/services/services_shape01.svg" alt="shape" data-aos="fade-down-left" data-aos-delay="400">
-                <img src="assets/img/services/services_shape02.svg" alt="shape" data-aos="fade-up-right" data-aos-delay="400">
-            </div>
         </section>
         <!-- services-area-end -->
 
- 
+<!-- pricing-area -->
+<!-- pricing-area (sans décor, n'altère pas le background global) -->
+<section id="tarifs" class="pricing__area section-py-130">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8">
+        <div class="section__title text-center mb-50" data-aos="fade-up">
+          <h2 class="title" style="color:brown">NOS TARIFS MENSUELS POUR LES PME</h2>
+          <p class="mt-10">Choisissez la formule adaptée à votre activité. Options possibles sur devis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row gutter-y-30">
+      <!-- Starter -->
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="0">
+        <div class="pricing__card">
+          <div class="pricing__head">
+            <h3 class="pricing__name">Starter</h3>
+            <div class="pricing__price"><strong>40&nbsp;000</strong><span> FCFA / mois</span></div>
+          </div>
+          <ul class="pricing__list list-wrap">
+            <li>Comptabilité (très faible volume)</li>
+            <li>Obligations fiscales & sociales (TEE)</li>
+            <li>Admin du personnel (1–3)</li>
+            <li>Conseils en gestion</li>
+            <li>Rapport mensuel</li>
+          </ul>
+          <div class="pricing__cta"><a href="#contact" class="tg-btn">Demander un devis</a></div>
+        </div>
+      </div>
+
+      <!-- Eco -->
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="pricing__card">
+          <div class="pricing__head">
+            <h3 class="pricing__name">Eco</h3>
+            <div class="pricing__price"><strong>70&nbsp;000</strong><span> FCFA / mois</span></div>
+          </div>
+          <ul class="pricing__list list-wrap">
+            <li>Comptabilité (faible volume)</li>
+            <li>Obligations fiscales & sociales (TEE)</li>
+            <li>Admin du personnel (1–3)</li>
+            <li>Conseils en gestion</li>
+            <li>Rapport mensuel</li>
+          </ul>
+          <div class="pricing__cta"><a href="#contact" class="tg-btn">Demander un devis</a></div>
+        </div>
+      </div>
+
+      <!-- Business (mis en avant) -->
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="pricing__card is-popular">
+          <div class="pricing__badge">Populaire</div>
+          <div class="pricing__head">
+            <h3 class="pricing__name">Business</h3>
+            <div class="pricing__price"><strong>100&nbsp;000</strong><span> FCFA / mois</span></div>
+          </div>
+          <ul class="pricing__list list-wrap">
+            <li>Comptabilité (grand volume)</li>
+            <li>TEE / RME / RSI</li>
+            <li>Admin du personnel (3–10)</li>
+            <li>Contentieux fiscaux & sociaux</li>
+            <li>Conseils + tableau de bord</li>
+          </ul>
+          <div class="pricing__cta"><a href="#contact" class="tg-btn">Demander un devis</a></div>
+        </div>
+      </div>
+
+      <!-- Premium -->
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="pricing__card">
+          <div class="pricing__head">
+            <h3 class="pricing__name">Premium</h3>
+            <div class="pricing__price"><strong>185&nbsp;000</strong><span> FCFA / mois</span></div>
+          </div>
+          <ul class="pricing__list list-wrap">
+            <li>Comptabilité (grand volume)</li>
+            <li>TEE / RME / RSI / RNI</li>
+            <li>Admin du personnel (3–20)</li>
+            <li>Contentieux fiscaux & sociaux</li>
+            <li>Conseils + tableau de bord</li>
+          </ul>
+          <div class="pricing__cta"><a href="#contact" class="tg-btn">Demander un devis</a></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="pricing__note text-center mt-30" data-aos="fade-up" data-aos-delay="350">
+      * Tarifs indicatifs. Le prix final dépend du volume de pièces et des obligations légales.
+    </p>
+  </div>
+</section>
 
 
 
- 
 
- 
+
+
+
 
         <!-- team-area -->
-        <section class="team__area fix section-py-130" style="  background: rgb(8, 25, 71)" >
-            <div class="container" >
+        <section class="team__area fix section-py-130" style="  background: rgb(8, 25, 71)">
+            <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-6">
                         <div class="section__title white-title mb-50 mb-md-30">
@@ -419,7 +726,7 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                             <h2 class="title">Découvrez notre équipe <br> d'experts spécialisés</h2>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="row gutter-y-30 justify-content-center">
                     <div class="col-xl-3 col-lg-4 col-md-6">
@@ -436,10 +743,14 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     <i class="fas fa-share-alt"></i>
                                 </div>
                                 <ul class="list-wrap">
-                                    <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://x.com/home" target="_blank"><img
+                                                src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
                                 </ul>
                             </div>
                             <div class="team__shape">
@@ -461,10 +772,14 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     <i class="fas fa-share-alt"></i>
                                 </div>
                                 <ul class="list-wrap">
-                                    <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://x.com/home" target="_blank"><img
+                                                src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
                                 </ul>
                             </div>
                             <div class="team__shape">
@@ -486,10 +801,14 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     <i class="fas fa-share-alt"></i>
                                 </div>
                                 <ul class="list-wrap">
-                                    <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://x.com/home" target="_blank"><img
+                                                src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
                                 </ul>
                             </div>
                             <div class="team__shape">
@@ -511,10 +830,14 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     <i class="fas fa-share-alt"></i>
                                 </div>
                                 <ul class="list-wrap">
-                                    <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://x.com/home" target="_blank"><img
+                                                src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
                                 </ul>
                             </div>
                             <div class="team__shape">
@@ -523,7 +846,7 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                         </div>
                     </div>
                 </div>
-               
+
             </div>
             <div class="team__shape-wrap">
                 <img src="assets/img/team/team_shape01.svg" alt="shape" data-aos="fade-down-left" data-aos-delay="400">
@@ -533,9 +856,9 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
         </section>
         <!-- team-area-end -->
 
-       
 
-    
+
+
 
         <!-- testimonial-area -->
         <section class="testimonial__area fix">
@@ -572,8 +895,10 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                                 <img src="assets/img/icons/quote.svg" alt="icon" class="injectable">
                                             </div>
                                             <div class="testimonial__content">
-                                                <p>“Excellent content and a real sense of community among the participant
-                                                all curated in a wonderful setting. It is clear effort goes into the organization and planning of the gatherings. ”</p>
+                                                <p>“Excellent content and a real sense of community among the
+                                                    participant
+                                                    all curated in a wonderful setting. It is clear effort goes into the
+                                                    organization and planning of the gatherings. ”</p>
                                                 <div class="testimonial__rating">
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
@@ -594,8 +919,10 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                                 <img src="assets/img/icons/quote.svg" alt="icon" class="injectable">
                                             </div>
                                             <div class="testimonial__content">
-                                                <p>“Excellent content and a real sense of community among the participant
-                                                all curated in a wonderful setting. It is clear effort goes into the organization and planning of the gatherings. ”</p>
+                                                <p>“Excellent content and a real sense of community among the
+                                                    participant
+                                                    all curated in a wonderful setting. It is clear effort goes into the
+                                                    organization and planning of the gatherings. ”</p>
                                                 <div class="testimonial__rating">
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
@@ -616,8 +943,10 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                                 <img src="assets/img/icons/quote.svg" alt="icon" class="injectable">
                                             </div>
                                             <div class="testimonial__content">
-                                                <p>“Excellent content and a real sense of community among the participant
-                                                all curated in a wonderful setting. It is clear effort goes into the organization and planning of the gatherings. ”</p>
+                                                <p>“Excellent content and a real sense of community among the
+                                                    participant
+                                                    all curated in a wonderful setting. It is clear effort goes into the
+                                                    organization and planning of the gatherings. ”</p>
                                                 <div class="testimonial__rating">
                                                     <i class="fas fa-star"></i>
                                                     <i class="fas fa-star"></i>
@@ -650,8 +979,10 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                     </div>
                                 </div>
                                 <div class="testimonial__nav-two">
-                                    <button class="testimonial-button-prev"><img src="assets/img/icons/right_arrow.svg" alt="" class="injectable"></button>
-                                    <button class="testimonial-button-next"><img src="assets/img/icons/right_arrow.svg" alt="" class="injectable"></button>
+                                    <button class="testimonial-button-prev"><img src="assets/img/icons/right_arrow.svg"
+                                            alt="" class="injectable"></button>
+                                    <button class="testimonial-button-next"><img src="assets/img/icons/right_arrow.svg"
+                                            alt="" class="injectable"></button>
                                 </div>
                             </div>
                         </div>
@@ -661,7 +992,8 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
             <div class="testimonial__shape-wrap">
                 <img src="assets/img/images/testi_shape01.svg" alt="shape">
                 <img src="assets/img/images/testi_shape02.svg" alt="shape">
-                <img src="assets/img/images/testi_shape03.svg" alt="shape" data-aos="fade-up-right" data-aos-delay="400">
+                <img src="assets/img/images/testi_shape03.svg" alt="shape" data-aos="fade-up-right"
+                    data-aos-delay="400">
                 <img src="assets/img/images/testi_shape04.svg" alt="shape">
                 <img src="assets/img/images/testi_shape05.svg" alt="shape">
                 <img src="assets/img/images/map.svg" alt="shape" class="big-shape">
@@ -686,7 +1018,7 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                 <div class="section__title white-title mb-15">
                                     <h2 class="title">CONTACTEZ-NOUS</h2>
                                 </div>
-                     
+
                                 <form action="#" class="call__back-form">
                                     <div class="form-grp">
                                         <input type="text" placeholder="Name *">
@@ -708,11 +1040,13 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                 </div>
             </div>
             <div class="call__back-shape">
-                <img src="assets/img/images/call_back_shape01.svg" alt="shape" data-aos="fade-down-right" data-aos-delay="400">
+                <img src="assets/img/images/call_back_shape01.svg" alt="shape" data-aos="fade-down-right"
+                    data-aos-delay="400">
                 <img src="assets/img/images/call_back_shape02.svg" alt="shape">
                 <img src="assets/img/images/call_back_shape03.svg" alt="shape" class="alltuchtopdown">
                 <img src="assets/img/images/call_back_shape04.svg" alt="shape" class="rightToLeft">
-                <img src="assets/img/images/call_back_shape05.svg" alt="shape" data-aos="fade-up-left" data-aos-delay="400">
+                <img src="assets/img/images/call_back_shape05.svg" alt="shape" data-aos="fade-up-left"
+                    data-aos-delay="400">
             </div>
         </section>
         <!-- call-back-area-end -->
@@ -736,17 +1070,22 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                             </div>
                             <div class="footer__social">
                                 <ul class="list-wrap">
-                                    <li><a href="https://www.facebook.com/" target="_blank"><img src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://x.com/home" target="_blank"><img src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.instagram.com/" target="_blank"><img src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.pinterest.com/" target="_blank"><img src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
-                                    <li><a href="https://www.youtube.com/" target="_blank"><img src="assets/img/icons/youtube.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.facebook.com/" target="_blank"><img
+                                                src="assets/img/icons/facebook.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://x.com/home" target="_blank"><img
+                                                src="assets/img/icons/twitter.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.instagram.com/" target="_blank"><img
+                                                src="assets/img/icons/instagram.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.pinterest.com/" target="_blank"><img
+                                                src="assets/img/icons/pinterest.svg" alt="" class="injectable"></a></li>
+                                    <li><a href="https://www.youtube.com/" target="_blank"><img
+                                                src="assets/img/icons/youtube.svg" alt="" class="injectable"></a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                       
+
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
                         <div class="footer__widget">
@@ -755,21 +1094,21 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
                                 <li><a href="about.html">Acceuil</a></li>
                                 <li><a href="contact.html">A Propos</a></li>
                                 <li><a href="contact.html">SERVICES</a></li>
-                                
+
                             </ul>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-8">
                         <div class="footer__widget">
                             <h4 class="footer__widget-title">Contact</h4>
-                                     <div>
-           
-            <div className="space-y-2 text-sm text-gray-300">
-              <p>+225 07 87 44 88 57</p>
-              <p>anbcorporate225@gmail.com</p>
-              <p>Abidjan Cocody angré 8e tranche</p>
-            </div>
-          </div>
+                            <div>
+
+                                <div className="space-y-2 text-sm text-gray-300">
+                                    <p>+225 07 87 44 88 57</p>
+                                    <p>anbcorporate225@gmail.com</p>
+                                    <p>Abidjan Cocody angré 8e tranche</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -819,5 +1158,76 @@ Nos experts en droit des sociétés et en comptabilité travaillent en étroite 
         SVGInject(document.querySelectorAll("img.injectable"));
     </script>
 </body>
+<script>
+    (function () {
+        // Liens du menu (structure: ul.navigation > li > a)
+        const links = Array.from(document.querySelectorAll('.navigation > li > a[href^="#"]'));
+        if (!links.length) return;
+
+        // Calcule l’offset du header fixe
+        const header = document.querySelector('.tgmenu__nav, .sticky-header, header.nav, .header-area');
+        function getOffset() { return (header?.offsetHeight || 0) + 1; }
+
+        // Map sections <-> liens
+        const map = new Map();
+        links.forEach(a => {
+            const id = decodeURIComponent(a.getAttribute('href').slice(1));
+            const sec = document.getElementById(id);
+            if (sec) map.set(sec, a);
+        });
+        if (!map.size) return;
+
+        // Helpers pour activer/désactiver la classe sur les <li>
+        function setActive(a) {
+            links.forEach(x => x.parentElement && x.parentElement.classList.remove('active'));
+            a.parentElement && a.parentElement.classList.add('active');
+        }
+
+        // Scroll doux + active au clic
+        links.forEach(a => {
+            a.addEventListener('click', e => {
+                const hash = a.getAttribute('href');
+                const el = document.querySelector(hash);
+                if (!el) return;
+                e.preventDefault();
+                const y = el.getBoundingClientRect().top + window.pageYOffset - getOffset();
+                window.scrollTo({ top: y, behavior: 'smooth' });
+                setActive(a);
+                history.replaceState(null, '', hash);
+            });
+        });
+
+        // Active auto selon la section visible (au scroll)
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const link = map.get(entry.target);
+                    if (!link) return;
+                    if (entry.isIntersecting) setActive(link);
+                });
+            }, {
+                // On considère la section "active" dès ~30% visible, en tenant compte du header
+                rootMargin: `-${getOffset()}px 0px -60% 0px`,
+                threshold: [0.3]
+            });
+            map.forEach((_, section) => io.observe(section));
+        } else {
+            // Fallback simple
+            window.addEventListener('scroll', () => {
+                let current = null, off = getOffset();
+                map.forEach((a, sec) => {
+                    const top = sec.getBoundingClientRect().top - off;
+                    if (top <= 5) current = a;
+                });
+                if (current) setActive(current);
+            }, { passive: true });
+        }
+
+        // État initial (hash courant ou premier lien)
+        const init = (location.hash && document.querySelector('.navigation > li > a[href="' + location.hash + '"]')) || links[0];
+        if (init) setActive(init);
+    })();
+</script>
+
 
 </html>
